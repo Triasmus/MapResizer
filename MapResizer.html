@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link class="jsbin" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+<meta charset=utf-8 />
+<title>JS Bin</title>
+<!--[if IE]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<style>
+  article, aside, figure, footer, header, hgroup, 
+  menu, nav, section { display: block; }
+</style>
+</head>
+<body>
+    <div style="width:300px;">
+        <div>
+			<input type='file' onchange="readURL(this);" />
+				<img id="blah" src="#" alt="your image" />
+		</div>
+        <div style="padding-top:20px;">
+            <div id="coord"></div>
+        </div>
+    </div>
+<p id="results">result</p>
+<p id="results2">result2</p>
+<button type="submit" onclick="window.open('file.doc')">Download!</button>
+</body>
+</html>
+
+<script>
+    $(document).ready(function() {
+        $('img').on("mousemove", function(e) {
+            var offset = $(this).offset();
+            var X = (e.pageX - offset.left);
+            var Y = (e.pageY - offset.top);
+            $('#coord').text('X: ' + X + ', Y: ' + Y);
+      });
+    });
+</script>
+
+<script>
+	var coords = [];
+   $(document).ready(function() {
+        $('img').click(function(e) {
+            var offset = $(this).offset();
+            var Xclick = (e.pageX - offset.left);
+            var Yclick = (e.pageY - offset.top);
+            $('#coord').text('X: ' + Xclick + ', Y: ' + Yclick);
+	  coords.push({ x : Math.round(Xclick), y : Math.round(Yclick)});
+	  if (coords.length > 3){coords.shift();}
+	  document.getElementById("results").innerHTML = "You have clicked at: " + JSON.stringify(coords);
+        });
+    });
+</script>
+
+<script>
+   $(document).ready(function() {
+        $('img').click(function(f) {
+	  document.getElementById("results2").innerHTML = "First x: " + coords[0].x + "  First y: " + coords[0].y;
+        });
+    });
+</script>
+
+<script type="text/javascript">
+     function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#blah')
+                        .attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+</script>
+
