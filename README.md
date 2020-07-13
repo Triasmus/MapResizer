@@ -20,6 +20,7 @@ int approxCellWidth = xSecondClick - xFirstClick;
 int canvasSize = xThirdClick - xFirstClick;
 
 {
+
 int xCells = round(canvasSize / approxCellWidth);
 int newCanvasSize = xCells * newPixelWidth;
 
@@ -28,6 +29,7 @@ double xResizePercent = 100 * (newCanvasSize/canvasSize)
 OR
 
 double xResizePercent = 100 * (round(canvasSize/approxCellWidth) * newPixelWidth)/canvasSize
+
 }
 
 It might look like canvasSize can be canceled out, but it really can't because of the rounding that needs to happen.
