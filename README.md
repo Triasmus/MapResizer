@@ -17,11 +17,13 @@ For each axis
 int newPixelWidth = 50 (or other user input);
 
 int approxCellWidth = xSecondClick - xFirstClick;
+
 int canvasSize = xThirdClick - xFirstClick;
 
 {
 
 int xCells = round(canvasSize / approxCellWidth);
+
 int newCanvasSize = xCells * newPixelWidth;
 
 double xResizePercent = 100 * (newCanvasSize/canvasSize)
