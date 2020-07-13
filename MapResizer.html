@@ -24,9 +24,9 @@
             <div id="coord"></div>
         </div>
     </div>
-<p id="results">result</p>
-<p id="results2">result2</p>
-<button type="submit" onclick="window.open('file.doc')">Download!</button>
+<p id="results">Will show coordinates of last 3 button presses</p>
+<p id="results2">Will show suggested scaling when download is clicked</p>
+<input id="clickMe" type="button" value="Download!" onclick="doFunction();" />
 </body>
 </html>
 
@@ -56,13 +56,6 @@
     });
 </script>
 
-<script>
-   $(document).ready(function() {
-        $('img').click(function(f) {
-	  document.getElementById("results2").innerHTML = "First x: " + coords[0].x + "  First y: " + coords[0].y;
-        });
-    });
-</script>
 
 <script type="text/javascript">
      function readURL(input) {
@@ -75,7 +68,23 @@
                 };
 
                 reader.readAsDataURL(input.files[0]);
-            }
+           }
         }
+</script>
+
+<script type="text/javascript">
+function doFunction(){
+	var newPixelWidth = 50;
+	
+	var approxCellx = coords[1].x - coords[0].x;
+	var canvasX = coords[2].x - coords[0].x;
+	var xResizePercent = 100 * (Math.round(canvasX/approxCellx) * newPixelWidth)/canvasX
+	
+	var approxCelly = coords[1].y - coords[0].y;
+	var canvasY = coords[2].y - coords[0].y;
+	var yResizePercent = 100 * (Math.round(canvasY/approxCelly) * newPixelWidth)/canvasY
+
+	document.getElementById("results2").innerHTML = "X scaling: " + xResizePercent + "    Y scaling: " + yResizePercent;
+}
 </script>
 
