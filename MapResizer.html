@@ -23,6 +23,7 @@
 		</div>
         <div style="padding-top:20px;">
             <div id="coord"></div>
+            <div id="stuff"></div>
         </div>
     </div>
 <p id="results">Will show coordinates of last 3 button presses</p>
@@ -39,14 +40,19 @@
             var X = (e.pageX - offset.left);
             var Y = (e.pageY - offset.top);
             $('#coord').text('X: ' + X + ', Y: ' + Y);
+            $('#stuff').text('X size: ' + $(this).width() + ', Y size: ' + $(this).height());
       });
     });
 </script>
 
 <script>
 	var coords = [];
+	var imageWidth = 0;
+	var imageHeight = 0;
    $(document).ready(function() {
         $('img').click(function(e) {
+	imageWidth = $(this).width();
+	imageHeight = $(this).height();
             var offset = $(this).offset();
             var Xclick = (e.pageX - offset.left);
             var Yclick = (e.pageY - offset.top);
