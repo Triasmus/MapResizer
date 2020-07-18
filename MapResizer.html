@@ -59,6 +59,7 @@
 	
     $(document).ready(function() {
         $('img').on("mousemove", function(e) {
+			$('img').css('cursor','crosshair');
             var offset = $(this).offset();
             var X = (e.pageX - offset.left);
             var Y = (e.pageY - offset.top);
