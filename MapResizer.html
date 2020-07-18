@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link class="jsbin" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+<!--<link class="jsbin" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />-->
 <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
-<script src="src.js"></script>
 <meta charset=utf-8 />
-<title>JS Bin</title>
-<!--[if IE]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
+<title>Map Resizer</title>
 <style>
   article, aside, figure, footer, header, hgroup, 
   menu, nav, section { display: block; }
 </style>
 </head>
 <body>
+	<p>Instructions:</p>
+	<p>1. Make sure the image you want to resize is in the same directory as MapResizer.html</p>
+	<p>2. Select the image with the "Choose File" button</p>
+	<p>3. Three clicks on the image</p>
+	<p>3a. First click should be the most upper-left vertex you can clearly see</p>
+	<p>3b. Second click should be the vertex diagonally down-right of the previous click</p>
+	<p>3c. Third click should be the most bottom-right vertex you can clearly see (for best results)</p>
+	<p>NOTE: No matter what, each click needs to be farther down and farther right than the previous click</p>
+	<p>4. [optional] Change the size of grid you want the resized image to have</p>
+	<p>5. Click the "Download!" button</p>
     <div style="width:300px;">
         <div>
 			<input type='file' onchange="readURL(this);" />
@@ -23,27 +28,16 @@
 		</div>
         <div style="padding-top:20px;">
             <div id="coord"></div>
-            <div id="stuff"></div>
         </div>
     </div>
 <p id="results">Will show coordinates of last 3 button presses</p>
-<p id="results2">Will show suggested scaling when download is clicked</p>
+<input type="number" id="myNumber" value="50"><label> pixels</label>
+<p>The resized image will space the grid lines by the given number of pixels</p>
 <input id="clickMe" type="button" value="Download!" onclick="doFunction();" />
-<canvas id="myCanvas" width="1024" height="768" style="width: 100%; height: 100%"></canvas>
+<br><br>
+<canvas id="myCanvas" width="0" height="0"></canvas>
 </body>
 </html>
-
-<script>
-    $(document).ready(function() {
-        $('img').on("mousemove", function(e) {
-            var offset = $(this).offset();
-            var X = (e.pageX - offset.left);
-            var Y = (e.pageY - offset.top);
-            $('#coord').text('X: ' + X + ', Y: ' + Y);
-            $('#stuff').text('X size: ' + $(this).width() + ', Y size: ' + $(this).height());
-      });
-    });
-</script>
 
 <script>
 	var coords = [];
@@ -62,21 +56,88 @@
 	  document.getElementById("results").innerHTML = "You have clicked at: " + JSON.stringify(coords);
         });
     });
+	
+    $(document).ready(function() {
+        $('img').on("mousemove", function(e) {
+            var offset = $(this).offset();
+            var X = (e.pageX - offset.left);
+            var Y = (e.pageY - offset.top);
+            $('#coord').text('X: ' + X + ', Y: ' + Y);
+      });
+    });
+	
 </script>
 
 
 <script type="text/javascript">
      function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
+		if (input.files && input.files[0]) {
+		   var reader = new FileReader();
 
-                reader.onload = function (e) {
-                    $('#blah')
-                        .attr('src', e.target.result);
-                };
+			reader.onload = function (e) {
+				$('#blah')
+					.attr('src', e.target.result);
+			};
 
-                reader.readAsDataURL(input.files[0]);
-                fileName = input.files[0];
-           }
-        }
+			reader.readAsDataURL(input.files[0]);
+			fileName = input.files[0];
+	   }
+	}
+		
+	function download(data, filename, type) {
+		var file = new Blob([data], {type: type});
+		if (window.navigator.msSaveOrOpenBlob) // IE10+
+			window.navigator.msSaveOrOpenBlob(file, filename);
+		else { // Others
+			var a = document.createElement("a"),
+					url = URL.createObjectURL(file);
+			a.href = url;
+			a.download = filename;
+			document.body.appendChild(a);
+			a.click();
+			setTimeout(function() {
+				document.body.removeChild(a);
+				window.URL.revokeObjectURL(url);  
+			}, 0); 
+		}
+	}
+
+	function doFunction(){
+		var newPixelWidth = document.getElementById("myNumber").value;
+
+		var approxCellx = coords[1].x - coords[0].x;
+		var canvasX = coords[2].x - coords[0].x;
+		var xResizeScale = (Math.round(canvasX/approxCellx) * newPixelWidth)/canvasX
+		
+		var approxCelly = coords[1].y - coords[0].y;
+		var canvasY = coords[2].y - coords[0].y;
+		var yResizeScale = (Math.round(canvasY/approxCelly) * newPixelWidth)/canvasY
+
+		const elem = document.createElement('canvas');
+		elem.width = 0;
+		elem.height = 0;
+		const ctx = elem.getContext('2d');
+		// img.width and img.height will contain the original dimensions
+		var image = new Image();
+		image.src = fileName.name;
+		
+		image.onload = function () {
+		
+			var c = document.getElementById("myCanvas");
+			var ctx = c.getContext("2d");
+			var img = document.getElementById("blah");
+			// TODO DO MATH
+			var xNewSize = Math.round(imageWidth * xResizeScale);
+			var yNewSize = Math.round(imageHeight * yResizeScale);
+			c.width = xNewSize;
+			c.height = yNewSize;
+			$('#stuff2').text('imageWidth: ' + imageWidth + ', imageHeight: ' + imageHeight + ', xResizeScale: ' + xResizeScale + ', yResizeScale: ' + yResizeScale + ', xNewSize: ' + xNewSize + ', yNewSize: ' + yNewSize);
+			ctx.drawImage(img, 0, 0, imageWidth, imageHeight, 0, 0, xNewSize, yNewSize);
+			var name = fileName.name;
+			name = name.substring(0, name.lastIndexOf('.'));
+			ctx.canvas.toBlob((blob) => {
+				download(blob, name+"Resized.png", "application/json");
+			}, 'image/png', 1);    
+		}
+	}
 </script>

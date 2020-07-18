@@ -1,40 +1,40 @@
 ﻿# MapResizer
-1. Choose the map
+1. Make sure the image you want to resize is in the same directory as MapResizer.html
 
-2. Select the top-left vertex and then the bottom-right vertex of a single grid square somewhere in the top-left of the map
+2. Select the image with the "Choose File" button
 
-3. Select the farthest bottom-right vertex you can see
+3. Three clicks on the image
 
-3. input pixel width per cell of resized map (default 50)
+3a. First click should be the most upper-left vertex you can clearly see
 
-4. Click Save to save the resized image
+3b. Second click should be the vertex diagonally down-right of the previous click
+
+3c. Third click should be the most bottom-right vertex you can clearly see (for best results)
+
+NOTE: No matter what, each click needs to be farther down and farther right than the previous click
+
+4. [optional] Change the size of grid you want the resized image to have
+
+5. Click the "Download!" button
+
 
 
 # How it does it
 
 For each axis
 
-int newPixelWidth = 50 (or other user input);
+newCellSize = 50 (or other user input);
 
-int approxCellWidth = xSecondClick - xFirstClick;
+approxCellSize = SecondClickPos - FirstClickPos;
 
-int canvasSize = xThirdClick - xFirstClick;
+canvasSize = ThirdClickPos - FirstClickPos;
 
-{
+double ResizePercent = (round(canvasSize/approxCellSize) * newCellSize)/canvasSize
 
-int xCells = round(canvasSize / approxCellWidth);
-
-int newCanvasSize = xCells * newPixelWidth;
-
-double xResizePercent = 100 * (newCanvasSize/canvasSize)
-
-OR
-
-double xResizePercent = 100 * (round(canvasSize/approxCellWidth) * newPixelWidth)/canvasSize
-
-}
 
 It might look like canvasSize can be canceled out, but it really can't because of the rounding that needs to happen.
+
+The third click needs to be as far down as we can go so that the error from trying to eyeball where to click is smaller.
 
 # Sample Map
 
