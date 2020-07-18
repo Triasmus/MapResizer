@@ -5,11 +5,11 @@
 
 3. Three clicks on the image
 
-3a. First click should be the most upper-left vertex you can clearly see
+3a. First click should be the most upper-left intersection you can clearly see
 
-3b. Second click should be the vertex diagonally down-right of the previous click
+3b. Second click should be the intersection diagonally down-right of the previous click
 
-3c. Third click should be the most bottom-right vertex you can clearly see (for best results)
+3c. Third click should be the most bottom-right intersection you can clearly see (for best results)
 
 NOTE: No matter what, each click needs to be farther down and farther right than the previous click
 
